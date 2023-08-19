@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"mime/multipart"
@@ -49,6 +50,9 @@ func (c *Client) Initialize(ctx context.Context) (*InitializeResponse, error) {
 	defer io.Copy(ioutil.Discard, res.Body)
 
 	// MEMO: /initializeの成功ステータスによって第二引数が変わる可能性がある
+	fmt.Println("*************************")
+	fmt.Println(res)
+	fmt.Println("----------------------------------------------------------")
 	err = checkStatusCode(res, []int{http.StatusOK})
 	if err != nil {
 		return nil, failure.Wrap(err, failure.Message("POST /initialize: レスポンスコードが不正です"))
@@ -117,6 +121,9 @@ func (c *Client) GetChairDetailFromID(ctx context.Context, id string) (*asset.Ch
 
 	var chair asset.Chair
 
+	fmt.Println("**************************************************")
+	fmt.Println(res.Body)
+	fmt.Println(res)
 	err = json.NewDecoder(res.Body).Decode(&chair)
 	if err != nil {
 		if ctxErr := ctx.Err(); ctxErr != nil {
